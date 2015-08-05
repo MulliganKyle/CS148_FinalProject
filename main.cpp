@@ -367,7 +367,7 @@ int main(int argc, char** argv){
    vertexShader   = std::string(argv[1]);
    fragmentShader = std::string(argv[2]);
 
-   load_obj("meshes/capsule.obj");
+   load_obj("meshes/apple.obj");
 
    // Initialize GLUT.
    glutInit(&argc, argv);
