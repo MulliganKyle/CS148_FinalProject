@@ -34,6 +34,8 @@ float varR=0.5;
 float varG=0.5;
 float varB=0.5;
 
+GLuint texId;
+
 struct point
 {
    float x, y, z;
@@ -73,25 +75,31 @@ std::vector<triangle> triangles;
 
 
 void DrawWithShader(){
-   shader->Bind();
-   shader->SetUniform("specularColor1", varR, varG, varB);
+   //shader->Bind();
    
    glPolygonMode(GL_FRONT, GL_FILL);
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+   glBindTexture(GL_TEXTURE_2D, texId);
    for(triangle someTriangles: triangles)
    {
       glBegin(GL_TRIANGLES);
+      glTexCoord2f(someTriangles.v0.t.x, -1*someTriangles.v0.t.y);
       glNormal3f(someTriangles.v0.n.x, someTriangles.v0.n.y, someTriangles.v0.n.z);
       glVertex3f(someTriangles.v0.p.x, someTriangles.v0.p.y, someTriangles.v0.p.z);
 
+      glTexCoord2f(someTriangles.v1.t.x, -1*someTriangles.v1.t.y);
       glNormal3f(someTriangles.v1.n.x, someTriangles.v1.n.y, someTriangles.v1.n.z);
       glVertex3f(someTriangles.v1.p.x, someTriangles.v1.p.y, someTriangles.v1.p.z);
 
+      glTexCoord2f(someTriangles.v2.t.x, -1*someTriangles.v2.t.y);
       glNormal3f(someTriangles.v2.n.x, someTriangles.v2.n.y, someTriangles.v2.n.z);
       glVertex3f(someTriangles.v2.p.x, someTriangles.v2.p.y, someTriangles.v2.p.z);
       glEnd();
    }
+    //glutSolidTeapot(1.0);
 
-   shader->UnBind();
+   //shader->UnBind();
 }
 
 void DisplayCallback(){
@@ -103,7 +111,9 @@ void DisplayCallback(){
    
    glRotatef(x_rot, 1.0, 0.0, 0.0);
    glRotatef(y_rot, 0.0, 1.0, 0.0);
+   glMatrixMode(GL_PROJECTION);
    glTranslatef(0.0, 0.0, depth);
+   glMatrixMode(GL_MODELVIEW);
 
    DrawWithShader();
    
@@ -169,14 +179,33 @@ void KeyCallback(unsigned char key, int x, int y)
 
    glutPostRedisplay();
 }
+void loadTexture(const std::string& texFilename){
+	glShadeModel(GL_FLAT);
+	SimpleImage texPNG(texFilename);
+	int w = texPNG.width();
+	int h = texPNG.height();
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+	glGenTextures(1, &texId);
+	glBindTexture(GL_TEXTURE_2D, texId);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, texPNG.data());
+}
 void Setup()
 {
-   shader = new SimpleShaderProgram();
-   shader->LoadVertexShader(vertexShader);
-   shader->LoadFragmentShader(fragmentShader);
-   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-   glEnable(GL_DEPTH_TEST);
+	shader = new SimpleShaderProgram();
+	shader->LoadVertexShader(vertexShader);
+	shader->LoadFragmentShader(fragmentShader);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+
+   	
 }
 
 
@@ -203,6 +232,7 @@ void mouseMotion(int x, int y)
       glutPostRedisplay();
    }
 }
+
 
 
 
@@ -368,6 +398,7 @@ int main(int argc, char** argv){
    fragmentShader = std::string(argv[2]);
 
    load_obj("meshes/apple.obj");
+   
 
    // Initialize GLUT.
    glutInit(&argc, argv);
@@ -396,7 +427,7 @@ int main(int argc, char** argv){
 #endif
 
    Setup();
-
+   loadTexture("./textures/tree.png");
    glutDisplayFunc(DisplayCallback);
    glutReshapeFunc(ReshapeCallback);
    glutMouseFunc(mouseButton);
