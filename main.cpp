@@ -30,9 +30,6 @@ float x_diff= 0.0;
 float y_diff= 0.0;
 
 float depth= 0.0;
-float varR=0.5;
-float varG=0.5;
-float varB=0.5;
 
 GLuint texId;
 
@@ -137,40 +134,10 @@ void KeyCallback(unsigned char key, int x, int y)
 {
    switch(key) {
       case '-':
-	 depth=-2;
+	 depth=-50;
 	 break;
       case '=':
-	 depth=2;
-	 break;
-      case 'a':
-	 varR+=.1;
-	 if(varR>1.0)
-	    varR=1.0;
-	 break;
-      case 'z':
-	 varR-=.1;
-	 if(varR<0.0)
-	    varR=0.0;
-	 break;
-      case 's':
-	 varG+=.1;
-	 if(varG>1.0)
-	    varG=1.0;
-	 break;
-      case 'x':
-	 varG-=.1;
-	 if(varG<0.0)
-	    varG=0.0;
-	 break;
-      case 'd':
-	 varB+=.1;
-	 if(varB>1.0)
-	    varB=1.0;
-	 break;
-      case 'c':
-	 varB-=.1;
-	 if(varB<0.0)
-	    varB=0.0;
+	 depth=50;
 	 break;
       case 'q':
 	 exit(0);
