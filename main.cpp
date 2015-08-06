@@ -116,7 +116,8 @@ void DisplayCallback(){
    glMatrixMode(GL_MODELVIEW);
 
    DrawWithShader();
-   
+
+   depth=0;
 
    glutSwapBuffers();
 }
@@ -136,10 +137,10 @@ void KeyCallback(unsigned char key, int x, int y)
 {
    switch(key) {
       case '-':
-	 depth-=.1;
+	 depth=-2;
 	 break;
       case '=':
-	 depth+=.1;
+	 depth=2;
 	 break;
       case 'a':
 	 varR+=.1;
@@ -427,7 +428,7 @@ int main(int argc, char** argv){
 #endif
 
    Setup();
-   loadTexture("./textures/tree.png");
+   loadTexture("./textures/result.png");
    glutDisplayFunc(DisplayCallback);
    glutReshapeFunc(ReshapeCallback);
    glutMouseFunc(mouseButton);
