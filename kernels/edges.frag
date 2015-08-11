@@ -23,13 +23,17 @@ void main(){
 	//}
 	//vec3 cameraVector = vec3(0, 0, 10);
 	//float camNormDot = dot(vertNormal, cameraVector);
-	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st);
+	//gl_FragColor = texture2D(texture1, gl_TexCoord[0].st);
 
 
 	//vec2 range = vec2(0.0, 2.0);
 	//float randomNum = rand(range);
+	float testprod = cos((vertPoint.x + vertPoint.y)/2.0)/4.0;
 
-	if(vertNormal.z >= -0.25 && vertNormal.z <= 0.25){
-		gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	if(!(vertNormal.z >= (-1.0*testprod) && vertNormal.z <= testprod)){
+		gl_FragColor = texture2D(texture1, gl_TexCoord[0].st);
+	}
+	if(gl_FragColor.rgb == vec3(0.0, 0.0, 0.0)){
+		discard;
 	}
 }

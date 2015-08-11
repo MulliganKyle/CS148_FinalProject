@@ -80,7 +80,10 @@ std::vector<triangle> triangles;
 void DrawWithShader(){
 	glPolygonMode(GL_FRONT, GL_FILL);
     glEnable(GL_TEXTURE_2D);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+	glDisable(GL_LIGHTING);
+	glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
     glBindTexture(GL_TEXTURE_2D, texId);
     shader->Bind();
    
