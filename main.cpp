@@ -30,6 +30,14 @@ float x_diff= 0.0;
 float y_diff= 0.0;
 
 float depth= 0.0;
+float varR=0.5;
+float varG=0.5;
+float varB=0.5;
+
+
+
+float minX, minY, minZ, maxX, maxY, maxZ;
+
 
 GLuint texId;
 
@@ -72,12 +80,13 @@ std::vector<triangle> triangles;
 
 
 void DrawWithShader(){
-   //shader->Bind();
+	glPolygonMode(GL_FRONT, GL_FILL);
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glBindTexture(GL_TEXTURE_2D, texId);
+    shader->Bind();
    
-   glPolygonMode(GL_FRONT, GL_FILL);
-   glEnable(GL_TEXTURE_2D);
-   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-   glBindTexture(GL_TEXTURE_2D, texId);
+   
    for(triangle someTriangles: triangles)
    {
       glBegin(GL_TRIANGLES);
@@ -96,7 +105,7 @@ void DrawWithShader(){
    }
     //glutSolidTeapot(1.0);
 
-   //shader->UnBind();
+   shader->UnBind();
 }
 
 void DisplayCallback(){
@@ -104,7 +113,7 @@ void DisplayCallback(){
 
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   glTranslatef(0.f, 0.f, -10.f);
+   glTranslatef(-(maxX + minX)/2.0f,-(maxY + minY)/2.0f,-((maxZ + minZ)/2.0f)-((std::abs(maxZ-minZ))*2.0));
    
    glRotatef(x_rot, 1.0, 0.0, 0.0);
    glRotatef(y_rot, 0.0, 1.0, 0.0);
@@ -113,8 +122,8 @@ void DisplayCallback(){
    glMatrixMode(GL_MODELVIEW);
 
    DrawWithShader();
-
-   depth=0;
+   
+	depth=0;
 
    glutSwapBuffers();
 }
@@ -134,10 +143,40 @@ void KeyCallback(unsigned char key, int x, int y)
 {
    switch(key) {
       case '-':
-	 depth=-50;
+	 depth-=.1;
 	 break;
       case '=':
-	 depth=50;
+	 depth+=.1;
+	 break;
+      case 'a':
+	 varR+=.1;
+	 if(varR>1.0)
+	    varR=1.0;
+	 break;
+      case 'z':
+	 varR-=.1;
+	 if(varR<0.0)
+	    varR=0.0;
+	 break;
+      case 's':
+	 varG+=.1;
+	 if(varG>1.0)
+	    varG=1.0;
+	 break;
+      case 'x':
+	 varG-=.1;
+	 if(varG<0.0)
+	    varG=0.0;
+	 break;
+      case 'd':
+	 varB+=.1;
+	 if(varB>1.0)
+	    varB=1.0;
+	 break;
+      case 'c':
+	 varB-=.1;
+	 if(varB<0.0)
+	    varB=0.0;
 	 break;
       case 'q':
 	 exit(0);
@@ -232,8 +271,23 @@ void load_obj(const std::string& filename)
 	 else if (mode == "v")
 	 {
 	    ifs >> x;
+	    if(minX > x ){
+	    	minX = x;
+	    }if(maxX < x ){
+	    	maxX = x;
+	    }
 	    ifs >> y;
+	    if(minY > y){
+	    	minY = y;
+	    }if(maxY < y){
+	    	maxY = y;
+	    }
 	    ifs >> z;
+	    if(minZ > z ){
+	    	minZ = z;
+	    }if(maxZ < z){
+	    	maxZ = z;
+	    }
 	    points.push_back(point(x,y,z));
 	 }
 	 else if (mode == "vt")
@@ -365,7 +419,7 @@ int main(int argc, char** argv){
    vertexShader   = std::string(argv[1]);
    fragmentShader = std::string(argv[2]);
 
-   load_obj("meshes/apple.obj");
+   load_obj("meshes/capsule.obj");
    
 
    // Initialize GLUT.
@@ -395,7 +449,7 @@ int main(int argc, char** argv){
 #endif
 
    Setup();
-   loadTexture("./textures/result.png");
+   loadTexture("./textures/yellow.png");
    glutDisplayFunc(DisplayCallback);
    glutReshapeFunc(ReshapeCallback);
    glutMouseFunc(mouseButton);

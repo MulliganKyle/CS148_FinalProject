@@ -2,8 +2,14 @@
 
 varying vec3 vertNormal;
 varying vec4 vertPoint;
+
 uniform sampler2D texture1;
-uniform vec3 _WorldSpaceCameraPos;
+uniform float maxX;
+uniform float minX;
+uniform float maxY;
+uniform float minY;
+uniform float maxZ;
+uniform float minZ;
 
 
 float rand(vec2 co){
@@ -11,14 +17,19 @@ float rand(vec2 co){
 }
 
 void main(){
-	vec3 cameraVector = normalize(_WorldSpaceCameraPos-vertPoint.xyz);
-	float camNormDot = dot(vertNormal, cameraVector);
+	//float zdiff = maxZ-minZ;
+	//if (zdiff < 0.0){
+	//	zdiff = -1.0*zdiff;
+	//}
+	//vec3 cameraVector = vec3(0, 0, 10);
+	//float camNormDot = dot(vertNormal, cameraVector);
 	gl_FragColor = texture2D(texture1, gl_TexCoord[0].st);
 
-	//vec2 range = vec2(0.0, 10);
+
+	//vec2 range = vec2(0.0, 2.0);
 	//float randomNum = rand(range);
 
-	if(camNormDot >= 0.0 && camNormDot <= 0.5){
-		gl_FragColor = vec4(0.2, 0.2, 0.2, 1.0);
+	if(vertNormal.z >= -0.25 && vertNormal.z <= 0.25){
+		gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 	}
 }
