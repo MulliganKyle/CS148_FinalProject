@@ -1,5 +1,7 @@
 
 #include "main.h"
+#include "createTexture.h"
+
 #ifdef WIN32
 #define ssize_t SSIZE_T
 #endif
@@ -30,10 +32,6 @@ float x_diff= 0.0;
 float y_diff= 0.0;
 
 float depth= 0.0;
-float varR=0.5;
-float varG=0.5;
-float varB=0.5;
-
 
 
 float minX, minY, minZ, maxX, maxY, maxZ;
@@ -143,40 +141,10 @@ void KeyCallback(unsigned char key, int x, int y)
 {
    switch(key) {
       case '-':
-	 depth-=.1;
+	 depth-=10;
 	 break;
       case '=':
-	 depth+=.1;
-	 break;
-      case 'a':
-	 varR+=.1;
-	 if(varR>1.0)
-	    varR=1.0;
-	 break;
-      case 'z':
-	 varR-=.1;
-	 if(varR<0.0)
-	    varR=0.0;
-	 break;
-      case 's':
-	 varG+=.1;
-	 if(varG>1.0)
-	    varG=1.0;
-	 break;
-      case 'x':
-	 varG-=.1;
-	 if(varG<0.0)
-	    varG=0.0;
-	 break;
-      case 'd':
-	 varB+=.1;
-	 if(varB>1.0)
-	    varB=1.0;
-	 break;
-      case 'c':
-	 varB-=.1;
-	 if(varB<0.0)
-	    varB=0.0;
+	 depth+=10;
 	 break;
       case 'q':
 	 exit(0);
@@ -412,14 +380,14 @@ void load_obj(const std::string& filename)
 
 int main(int argc, char** argv){
    if(!(argc == 3)){
-      printf("usage: ./hw5 <vertex shader> <fragment shader> \n");
+      printf("usage: ./project <vertex shader> <fragment shader> \n");
       return 0;
    }
 
    vertexShader   = std::string(argv[1]);
    fragmentShader = std::string(argv[2]);
 
-   load_obj("meshes/capsule.obj");
+   load_obj("meshes/apple.obj");
    
 
    // Initialize GLUT.
@@ -427,7 +395,7 @@ int main(int argc, char** argv){
    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
    glutInitWindowPosition(20, 20);
    glutInitWindowSize(640, 480);
-   glutCreateWindow("CS148 Assignment 5");
+   glutCreateWindow("CS148 Final Project");
 
    //
    // Initialize GLEW.
@@ -449,7 +417,8 @@ int main(int argc, char** argv){
 #endif
 
    Setup();
-   loadTexture("./textures/yellow.png");
+   createTexture();
+   loadTexture("./textures/paintTexture.png");
    glutDisplayFunc(DisplayCallback);
    glutReshapeFunc(ReshapeCallback);
    glutMouseFunc(mouseButton);

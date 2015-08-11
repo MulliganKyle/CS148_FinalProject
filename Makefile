@@ -3,7 +3,7 @@
 T1 := project
 
 # list files to compile and link together
-FILES1   := main SimpleImage stb 
+FILES1   := main SimpleImage stb createTexture 
 
 #################################################################
 
