@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "createTexture.h"
 
@@ -78,16 +77,15 @@ std::vector<triangle> triangles;
 
 
 void DrawWithShader(){
-	glPolygonMode(GL_FRONT, GL_FILL);
-    glEnable(GL_TEXTURE_2D);
-    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-	glDisable(GL_LIGHTING);
-	glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-    glBindTexture(GL_TEXTURE_2D, texId);
-    shader->Bind();
-   
-   
+   glPolygonMode(GL_FRONT, GL_FILL);
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+   glDisable(GL_LIGHTING);
+   glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+   glBindTexture(GL_TEXTURE_2D, texId);
+   shader->Bind();
+
+
    for(triangle someTriangles: triangles)
    {
       glBegin(GL_TRIANGLES);
@@ -104,7 +102,6 @@ void DrawWithShader(){
       glVertex3f(someTriangles.v2.p.x, someTriangles.v2.p.y, someTriangles.v2.p.z);
       glEnd();
    }
-    //glutSolidTeapot(1.0);
 
    shader->UnBind();
 }
@@ -115,7 +112,7 @@ void DisplayCallback(){
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    glTranslatef(-(maxX + minX)/2.0f,-(maxY + minY)/2.0f,-((maxZ + minZ)/2.0f)-((std::abs(maxZ-minZ))*2.0));
-   
+
    glRotatef(x_rot, 1.0, 0.0, 0.0);
    glRotatef(y_rot, 0.0, 1.0, 0.0);
    glMatrixMode(GL_PROJECTION);
@@ -123,8 +120,8 @@ void DisplayCallback(){
    glMatrixMode(GL_MODELVIEW);
 
    DrawWithShader();
-   
-	depth=0;
+
+   depth=0;
 
    glutSwapBuffers();
 }
@@ -158,32 +155,32 @@ void KeyCallback(unsigned char key, int x, int y)
    glutPostRedisplay();
 }
 void loadTexture(const std::string& texFilename){
-	glShadeModel(GL_FLAT);
-	SimpleImage texPNG(texFilename);
-	int w = texPNG.width();
-	int h = texPNG.height();
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+   glShadeModel(GL_FLAT);
+   SimpleImage texPNG(texFilename);
+   int w = texPNG.width();
+   int h = texPNG.height();
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glGenTextures(1, &texId);
-	glBindTexture(GL_TEXTURE_2D, texId);
+   glGenTextures(1, &texId);
+   glBindTexture(GL_TEXTURE_2D, texId);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, texPNG.data());
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, texPNG.data());
 }
 void Setup()
 {
-	shader = new SimpleShaderProgram();
-	shader->LoadVertexShader(vertexShader);
-	shader->LoadFragmentShader(fragmentShader);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
+   shader = new SimpleShaderProgram();
+   shader->LoadVertexShader(vertexShader);
+   shader->LoadFragmentShader(fragmentShader);
+   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+   glEnable(GL_DEPTH_TEST);
 
-   	
+
 }
 
 
@@ -243,21 +240,21 @@ void load_obj(const std::string& filename)
 	 {
 	    ifs >> x;
 	    if(minX > x ){
-	    	minX = x;
+	       minX = x;
 	    }if(maxX < x ){
-	    	maxX = x;
+	       maxX = x;
 	    }
 	    ifs >> y;
 	    if(minY > y){
-	    	minY = y;
+	       minY = y;
 	    }if(maxY < y){
-	    	maxY = y;
+	       maxY = y;
 	    }
 	    ifs >> z;
 	    if(minZ > z ){
-	    	minZ = z;
+	       minZ = z;
 	    }if(maxZ < z){
-	    	maxZ = z;
+	       maxZ = z;
 	    }
 	    points.push_back(point(x,y,z));
 	 }
@@ -391,7 +388,7 @@ int main(int argc, char** argv){
    fragmentShader = std::string(argv[2]);
 
    load_obj("meshes/apple.obj");
-   
+
 
    // Initialize GLUT.
    glutInit(&argc, argv);
